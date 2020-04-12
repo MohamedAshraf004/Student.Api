@@ -14,6 +14,7 @@ namespace Student.Api.Services
         Student.Api.Models.Student GetStudentById(int id);
         void UpdateStudent(Student.Api.Models.Student updatedStudent);
         void AddStudent(Student.Api.Models.Student model);
+        void DeleteStudent(int id);
         bool Save();
 
     }

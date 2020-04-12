@@ -1,7 +1,9 @@
-﻿using Student.Api.Data;
+﻿using Microsoft.AspNetCore.Hosting;
+using Student.Api.Data;
 using Student.Api.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +13,12 @@ namespace Student.Api.Services
     public class StudentRepository : IStudentRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public StudentRepository(AppDbContext dbContext)
+        public StudentRepository(AppDbContext dbContext,IWebHostEnvironment hostEnvironment)
         {
             this._dbContext = dbContext;
+            this._hostEnvironment = hostEnvironment;
         }
         public void AddStudent(Student.Api.Models.Student model)
         {
@@ -38,7 +42,20 @@ namespace Student.Api.Services
 
         public void UpdateStudent(Student.Api.Models.Student updatedStudent)
         {
-       
+            //var std = _dbContext.Students.Attach(updatedStudent);
+            //std.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            //_dbContext.SaveChanges();
+        }
+        public void DeleteStudent(int id)
+        {
+            var std = GetStudentById(id);
+            if (std.PhotoPath!=null)
+            {
+                string filePath = Path.Combine(_hostEnvironment.WebRootPath,
+                   "images", std.PhotoPath);
+                File.Delete(filePath);
+            }
+            _dbContext.Students.Remove(std);
         }
     }
 }

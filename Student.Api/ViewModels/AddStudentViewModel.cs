@@ -11,9 +11,9 @@ namespace Student.Api.ViewModels
 {
     public class AddStudentViewModel
     {
-        [Required]
+        [Required,MaxLength(50)]
         public string FirstName { get; set; }
-        [Required]
+        [Required, MaxLength(50)]
         public string LastName { get; set; }
 
         public string City { get; set; }
@@ -21,20 +21,20 @@ namespace Student.Api.ViewModels
         public string Street { get; set; }
         public string Country { get; set; }
 
-        [Required]
+        [Required, DataType(DataType.Date)]
         public DateTimeOffset Birthday { get; set; }
 
         [Required]
-        public Gender? Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [Required]
-        public int SSN { get; set; }
+        public double SSN { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
 
         [DataType(DataType.PhoneNumber)]
-        public int Phone { get; set; }
+        public string Phone { get; set; }
         public IFormFile Photo { get; set; }
 
     }

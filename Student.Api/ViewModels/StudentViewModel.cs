@@ -22,12 +22,13 @@ namespace Student.Api.ViewModels
 
         public int Age { get; set; }
 
-        public Gender? Gender { get; set; }
+        public Gender Gender { get; set; }
 
-        public int SSN { get; set; }
+        public double SSN { get; set; }
 
         public string Email { get; set; }
-        public int Phone { get; set; }
+        [DataType(DataType.PhoneNumber)]
+        public string Phone { get; set; }
         public string PhotoPath { get; set; }
     }
 }
