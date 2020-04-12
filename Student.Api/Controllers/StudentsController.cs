@@ -28,9 +28,9 @@ namespace Student.Api.Controllers
         }
         // GET: api/<controller>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string searchTerm)
         {
-            var students=_studentRepository.GetAllStudents();
+            var students=_studentRepository.GetAllStudents(searchTerm);
             var result = _mapper.Map<IEnumerable<StudentViewModel>>(students);
             if (result.Count() == 0)
             {

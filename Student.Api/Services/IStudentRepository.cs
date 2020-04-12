@@ -10,7 +10,7 @@ namespace Student.Api.Services
 {
     public interface IStudentRepository
     {
-        IEnumerable<Student.Api.Models.Student> GetAllStudents();
+        IEnumerable<Student.Api.Models.Student> GetAllStudents(string searchTerm);
         Student.Api.Models.Student GetStudentById(int id);
         void UpdateStudent(Student.Api.Models.Student updatedStudent);
         void AddStudent(Student.Api.Models.Student model);

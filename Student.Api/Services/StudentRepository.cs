@@ -25,8 +25,13 @@ namespace Student.Api.Services
             _dbContext.Students.Add(model);
         }
 
-        public IEnumerable<Student.Api.Models.Student> GetAllStudents()
+        public IEnumerable<Student.Api.Models.Student> GetAllStudents(string searchTerm)
         {
+            if (searchTerm !=null)
+            {
+                return _dbContext.Students.Where(s => s.FirstName.Contains(searchTerm) || s.LastName.Contains(searchTerm) ||
+                                    s.ZipCode.Contains(searchTerm) || s.Country.Contains(searchTerm) || s.Email.Contains(searchTerm));
+            }
             return _dbContext.Students;
         }
 
