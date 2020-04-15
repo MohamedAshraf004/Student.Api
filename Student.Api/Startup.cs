@@ -33,8 +33,36 @@ namespace Student.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddXmlDataContractSerializerFormatters();
+            
+            services.AddControllers(setup =>
+            {
+                setup.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters()
+                              .ConfigureApiBehaviorOptions(setupAction =>
+                              {
+                                  setupAction.InvalidModelStateResponseFactory = context =>
+                                  {
+                                      var problemDetails = new ValidationProblemDetails(context.ModelState)
+                                      {
+                                          // add additional info not added by default
+                                          Detail = "See the errors field for details.",
+                                          Instance = context.HttpContext.Request.Path,
+                                          Status = StatusCodes.Status422UnprocessableEntity,
+                                          Type = "https://student.com/modelvalidationproblem",
+                                          Title = "One or more validation errors occurred."
+
+                                      };
+                                      problemDetails.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
+                                      return new UnprocessableEntityObjectResult(problemDetails)
+                                      {
+                                          ContentTypes = { "application/problem+json" }
+                                      };
+                                  };
+                              })
+                     .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
+
+
+
             services.AddDbContextPool<AppDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("StudentDBConnection"));
@@ -65,9 +93,11 @@ namespace Student.Api
 
                     });
                 });
+                app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
